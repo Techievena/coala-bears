@@ -29,7 +29,7 @@ install:
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "SET PATH=C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
+  - "SET PATH=C:\\tools\\xmllint\\bin;C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
 
   # language-tool needs the registry tweaked here since it determines the java
   # version wrong (since appveyor has both, 1.7 and 1.8 in x86 and x64).
@@ -48,13 +48,19 @@ install:
   - "npm config set loglevel warn"
   - "npm install"
 
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/iconv-1.9.2.win32.zip -o iconv.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/libxml2-2.7.8.win32.zip -o libxml2.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/libxslt-1.1.26.win32.zip -o libxslt.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/zlib-1.2.5.win32.zip -o zlib.zip
+  - 7z x *.zip -oC:\tools\xmllint
+  - xcopy C:\tools\xmllint\iconv-1.9.2.win32 C:\tools\xmllint /E /H /R /X /Y /I /K
+  - xcopy C:\tools\xmllint\libxml2-2.7.8.win32 C:\tools\xmllint /E /H /R /X /Y /I /K
+  - xcopy C:\tools\xmllint\libxslt-1.1.26.win32 C:\tools\xmllint /E /H /R /X /Y /I /K
+  - xcopy C:\tools\xmllint\zlib-1.2.5 C:\tools\xmllint /E /H /R /X /Y /I /K
+
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
-  # Force DOS format, as Checkstyle configs enable NewlineAtEndOfFile,
-  # which defaults to CRLF on Windows, and Appveyor CI ignores .gitattributes
-  # http://help.appveyor.com/discussions/problems/5687-gitattributes-changes-dont-have-any-effect
-  - unix2dos tests/java/test_files/CheckstyleGood.java
   # Clang DLLs x64 were nowadays installed, but the x64 version hangs, so we
   # exclude according tests. See https://github.com/appveyor/ci/issues/495 and
   # https://github.com/appveyor/ci/issues/688
