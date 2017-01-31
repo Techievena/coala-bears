@@ -30,7 +30,7 @@ install:
   # done from inside the powershell script as it would require to restart
   # the parent CMD process).
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - "SET PATH=C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
+  - "SET PATH=C:\\tools\\xmllint\\bin;C:\\Program\ Files\\Java\\jdk1.7.0\\bin;%PATH%"
 
   # language-tool needs the registry tweaked here since it determines the java
   # version wrong (since appveyor has both, 1.7 and 1.8 in x86 and x64).
@@ -49,11 +49,21 @@ install:
   - "npm config set loglevel warn"
   - "npm install"
 
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/iconv-1.9.2.win32.zip -o iconv.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/libxml2-2.7.8.win32.zip -o libxml2.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/libxslt-1.1.26.win32.zip -o libxslt.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/zlib-1.2.5.win32.zip -o zlib.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/libxmlsec-1.2.18.win32.zip -o libxmlsec.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/libxmlsec-nounicode-1.2.18.win32.zip -o libxmlsec-nounicode.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/openssl-0.9.8a.win32.zip -o openssl.zip
+  - curl -fsSL ftp://ftp.zlatkovic.com/libxml/xsldbg-3.1.7.win32.zip -o xsldbg.zip
+  - 7z x *.zip -oC:\tools\xmllint
+
 build: false  # Not a C# project, build stuff at the test step instead.
 
 test_script:
   # Clang DLLs x64 were nowadays installed, but the x64 version hangs, so we
   # exclude according tests. See https://github.com/appveyor/ci/issues/495 and
   # https://github.com/appveyor/ci/issues/688
-  - "%CMD_IN_ENV% python -m pytest --cov -k \"not ClangASTPrintBear and not ClangCloneDetectionBear and not ClangComplexityBear and not ClangCountVectorCreator and not ClangCountingConditions\""
+  - "%CMD_IN_ENV% python -m pytest --cov XMLBear -k XMLBear"
   - "%CMD_IN_ENV% python setup.py install"
