@@ -36,13 +36,13 @@ valid_xml_chars = """<?xml version="1.0"?>
 <a>hey and hi</a>
 """
 
-dtd_file = os.path.join(os.path.dirname(__file__),
-                        'test_files',
-                        'note.dtd')
+dtd_file = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                        'test_files',
+                                        'note.dtd'))
 
-schema_file = os.path.join(os.path.dirname(__file__),
-                           'test_files',
-                           'note.xsd')
+schema_file = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                           'test_files',
+                                           'note.xsd'))
 
 valid_xml_path = load_testdata('note.xml')
 valid_xml_url = load_testdata('concept-valid.xml')
