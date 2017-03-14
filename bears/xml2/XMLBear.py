@@ -62,7 +62,7 @@ class XMLBear:
         stdout, stderr = output
         if stdout:
             # Return issues from stderr and stdout if stdout is not empty
-            return itertools.chain(
+            yield from itertools.chain(
                 self.process_output_regex(
                     stderr, filename, file,
                     output_regex=self._output_regex),
@@ -72,6 +72,6 @@ class XMLBear:
                     result_message='XML can be formatted better.'))
         else:
             # Return issues from stderr if stdout is empty
-            return self.process_output_regex(
+            yield from self.process_output_regex(
                 stderr, filename, file,
                 output_regex=self._output_regex)
